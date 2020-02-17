@@ -1,21 +1,24 @@
 ﻿using Nancy.Hosting.Self;
 using SimpleCrypto;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProgramManager
 {
-    class Program
+    public class Program
     {
         public static async Task Main(string[] _)
                => await new Program().InitAsync();
 
-        public string MasterToken { private set; get; } // Master token, only used for first connection
+        public Dictionary<string, UserPermission[]> Tokens { private set; get; } // Master token, only used for first connection
         public string Salt { private set; get; } // Token's salt
 
         public static Program P { private set; get; } // Static reference towards this class
+        public Random Rand { private set; get; }
+        public Db.Db ProgDb { private set; get; }
 
         public ICryptoService Crypto { private set; get; } // Crypto service to generate hashes (PBKDF2z)
 
@@ -28,6 +31,17 @@ namespace ProgramManager
                 throw new FileNotFoundException("Missing Keys/salt.txt");
             Salt = File.ReadAllText("Keys/salt.txt");
             Crypto = new PBKDF2();
+            Rand = new Random();
+
+            // Init db
+            ProgDb = new Db.Db();
+            await ProgDb.InitAsync();
+            Tokens = new Dictionary<string, UserPermission[]>();
+            string masterToken = await ProgDb.GetMasterToken();
+            if (masterToken != null)
+            {
+                Tokens.Add(masterToken, new[] { UserPermission.ManageUser });
+            }
 
             // Init backend
             AutoResetEvent autoEvent = new AutoResetEvent(false);
