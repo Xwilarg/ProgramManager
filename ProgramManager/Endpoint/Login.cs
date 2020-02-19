@@ -24,7 +24,7 @@ namespace ProgramManager.Endpoint
                     return (Response.AsJson(new Response.Information()
                     {
                         Message = "Invalid username/password combinaison"
-                    }, HttpStatusCode.BadRequest));
+                    }, HttpStatusCode.Unauthorized));
 
                 return (Response.AsJson(new Response.Login()
                 {
