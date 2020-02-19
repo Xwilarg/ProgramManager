@@ -4,7 +4,7 @@ namespace ProgramManager.Endpoint
 {
     public class UserAdd : NancyModule
     {
-        public UserAdd() : base("/")
+        public UserAdd() : base("/userAdd")
         {
             Post("/", x =>
             {

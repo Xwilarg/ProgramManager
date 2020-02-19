@@ -4,7 +4,7 @@ namespace ProgramManager.Endpoint
 {
     public class Login : NancyModule
     {
-        public Login() : base("/")
+        public Login() : base("/login")
         {
             Post("/", x =>
             {
