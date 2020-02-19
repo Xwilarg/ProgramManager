@@ -29,7 +29,7 @@ namespace ProgramManager.Db
         /// <summary>
         /// Does username and password leads to a valid account
         /// </summary>
-        public bool IsAuthValid(string password, string username)
+        public bool IsAuthValid(string username, string password)
         {
             if (DoesUserExists(username)) // username exists in db
             {
@@ -42,10 +42,12 @@ namespace ProgramManager.Db
         /// <summary>
         /// Get token session from username
         /// </summary>
-        public string GetTokenFromLogin(string username)
+        public string GetTokenFromLogin(string username, string password)
         {
             if (Tokens.ContainsValue(username))
                 return Tokens.Where(x => x.Value == username).First().Key;
+            if (!IsAuthValid(username, password))
+                return null;
             string token;
             do
             {

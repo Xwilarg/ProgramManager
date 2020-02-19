@@ -24,13 +24,16 @@ namespace ProgramManager.Endpoint
         /// <param name="args">All args (given by ParseArgs)</param>
         /// <param name="mandatory">List of mandatory parameters</param>
         /// <returns>Error is something wrong happened, else null</returns>
-        public static Answer? BasicCheck(NameValueCollection args, params string[] mandatory)
+        public static Answer? BasicCheck(bool checkToken, NameValueCollection args, params string[] mandatory)
         {
-            string token = args.Get("token");
-            if (string.IsNullOrEmpty(token))
-                return new Answer(HttpStatusCode.BadRequest, "Missing arguments");
-            if (!Program.P.ProgDb.IsTokenValid(token))
-                return new Answer(HttpStatusCode.Unauthorized, "Bad token");
+            if (checkToken)
+            {
+                string token = args.Get("token");
+                if (string.IsNullOrEmpty(token))
+                    return new Answer(HttpStatusCode.BadRequest, "Missing arguments");
+                if (!Program.P.ProgDb.IsTokenValid(token))
+                    return new Answer(HttpStatusCode.Unauthorized, "Bad token");
+            }
             foreach (string s in mandatory)
             {
                 if (string.IsNullOrWhiteSpace(args.Get(s)))

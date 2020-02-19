@@ -2,9 +2,9 @@
 
 namespace ProgramManager.Endpoint
 {
-    public class UserAdd : NancyModule
+    public class Login : NancyModule
     {
-        public UserAdd() : base("/")
+        public Login() : base("/")
         {
             Post("/", x =>
             {
@@ -12,20 +12,24 @@ namespace ProgramManager.Endpoint
                 var args = Common.ParseArgs(Request.Body);
 
                 // Error handling
-                Common.Answer? error = Common.BasicCheck(true, args, "token", "username", "password");
+                Common.Answer? error = Common.BasicCheck(false, args, "username", "password");
                 if (error.HasValue)
                     return (Response.AsJson(new Response.Information()
                     {
                         Message = error.Value.message
                     }, error.Value.code));
 
-                if (Program.P.ProgDb.DoesUserExists(args["username"]))
+                string userToken = Program.P.ProgDb.GetTokenFromLogin(args["username"], args["password"]);
+                if (userToken == null)
                     return (Response.AsJson(new Response.Information()
                     {
-                        Message = "User already exists"
+                        Message = "Invalid username/password combinaison"
                     }, HttpStatusCode.BadRequest));
 
-                return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
+                return (Response.AsJson(new Response.Login()
+                {
+                    Token = userToken
+                }));
             });
         }
     }
