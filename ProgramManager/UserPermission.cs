@@ -2,6 +2,8 @@
 {
     public enum UserPermission
     {
-        ManageUser
+        ManageUser = 1,
+        ManageProgram = 2,
+        RestartProgram = 4
     }
 }

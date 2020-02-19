@@ -1,8 +1,6 @@
 ﻿using Nancy.Hosting.Self;
 using SimpleCrypto;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,9 +10,6 @@ namespace ProgramManager
     {
         public static async Task Main(string[] _)
                => await new Program().InitAsync();
-
-        public Dictionary<string, UserPermission[]> Tokens { private set; get; } // Master token, only used for first connection
-        public string Salt { private set; get; } // Token's salt
 
         public static Program P { private set; get; } // Static reference towards this class
         public Random Rand { private set; get; }
@@ -27,20 +22,23 @@ namespace ProgramManager
             P = this;
 
             // Init authentification service
-            if (!Directory.Exists("Keys") || !File.Exists("Keys/salt.txt"))
-                throw new FileNotFoundException("Missing Keys/salt.txt");
-            Salt = File.ReadAllText("Keys/salt.txt");
             Crypto = new PBKDF2();
             Rand = new Random();
 
             // Init db
             ProgDb = new Db.Db();
             await ProgDb.InitAsync();
-            Tokens = new Dictionary<string, UserPermission[]>();
-            string masterToken = await ProgDb.GetMasterToken();
-            if (masterToken != null)
+            if (!await ProgDb.DoesAccountExists()) // No master account, we need to create one
             {
-                Tokens.Add(masterToken, new[] { UserPermission.ManageUser });
+                Console.WriteLine("Creating master user.");
+                Console.WriteLine("Enter your username:");
+                string username = Console.ReadLine();
+                Console.WriteLine("Enter your password:");
+                string password = Console.ReadLine();
+                ProgDb.AddUser(username, password, 0);
+                Console.WriteLine("Account created. Press enter to continue...");
+                Console.ReadKey();
+                Console.Clear();
             }
 
             // Init backend
