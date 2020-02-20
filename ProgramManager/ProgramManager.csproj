@@ -69,6 +69,7 @@
     <Compile Include="Endpoint\Base.cs" />
     <Compile Include="Endpoint\Common.cs" />
     <Compile Include="Endpoint\Login.cs" />
+    <Compile Include="Endpoint\TokenCheck.cs" />
     <Compile Include="Endpoint\UserAdd.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
