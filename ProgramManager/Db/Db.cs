@@ -86,7 +86,7 @@ namespace ProgramManager.Db
         {
             string str = "";
             for (int i = 0; i < 30; i++)
-                str += (char)Program.P.Rand.Next(33, 127);
+                str += (char)Program.P.Rand.Next(64, 127);
             return str;
         }
 
