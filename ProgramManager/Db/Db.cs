@@ -44,10 +44,10 @@ namespace ProgramManager.Db
         /// </summary>
         public string GetTokenFromLogin(string username, string password)
         {
-            if (Tokens.ContainsValue(username))
-                return Tokens.Where(x => x.Value == username).First().Key;
             if (!IsAuthValid(username, password))
                 return null;
+            if (Tokens.ContainsValue(username))
+                return Tokens.Where(x => x.Value == username).First().Key;
             string token;
             do
             {

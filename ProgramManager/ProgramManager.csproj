@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Db\Db.cs" />
     <Compile Include="Endpoint\Base.cs" />
     <Compile Include="Endpoint\Common.cs" />
