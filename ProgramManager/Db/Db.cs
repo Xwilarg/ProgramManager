@@ -47,9 +47,12 @@ namespace ProgramManager.Db
         {
             if (!IsAuthValid(username, password))
                 return null;
-            var elem = Tokens.Where(x => x.Value.Username == username);
-            if (elem != null)
-                return elem.First().Key;
+            if (Tokens.Count > 0)
+            {
+                var elem = Tokens.Where(x => x.Value.Username == username);
+                if (elem != null)
+                    return elem.First().Key;
+            }
             string token;
             do
             {
