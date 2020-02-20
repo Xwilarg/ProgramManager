@@ -12,7 +12,7 @@ namespace ProgramManager
 
             pipelines.AfterRequest.AddItemToEndOfPipeline((context) =>
             {
-                context.Response.WithHeader("Access-Control-Allow-Origin", "*");
+                context.Response.WithHeader("Access-Control-Allow-Origin", "https://admin.zirk.eu");
             });
         }
     }

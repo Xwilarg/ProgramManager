@@ -14,20 +14,21 @@ namespace ProgramManager.Endpoint
                 // Error handling
                 Common.Answer? error = Common.BasicCheck(true, args, "token");
                 if (error.HasValue)
-                    return (Response.AsJson(new Response.Information()
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = error.Value.message
-                    }, error.Value.code));
+                    }, error.Value.code);
 
 
-                if (!Program.P.ProgDb.IsTokenValid(args["token"])
-                    return (Response.AsJson(new Response.Information()
+                if (!Program.P.ProgDb.IsTokenValid(args["token"]))
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = "Invalid session token"
-                    }, HttpStatusCode.Unauthorized));
+                    }, HttpStatusCode.Unauthorized);
 
-                return (Response.AsJson(new Response.Empty()
-                { }, HttpStatusCode.NoContent));
+                return Response.AsJson(new Response.Empty()
+                { }, HttpStatusCode.NoContent);
             });
         }
     }
+}

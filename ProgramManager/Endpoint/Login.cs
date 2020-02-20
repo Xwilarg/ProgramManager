@@ -14,22 +14,22 @@ namespace ProgramManager.Endpoint
                 // Error handling
                 Common.Answer? error = Common.BasicCheck(false, args, "username", "password");
                 if (error.HasValue)
-                    return (Response.AsJson(new Response.Information()
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = error.Value.message
-                    }, error.Value.code));
+                    }, error.Value.code);
 
                 string userToken = Program.P.ProgDb.GetTokenFromLogin(args["username"], args["password"]);
                 if (userToken == null)
-                    return (Response.AsJson(new Response.Information()
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = "Invalid username/password combinaison"
-                    }, HttpStatusCode.Unauthorized));
+                    }, HttpStatusCode.Unauthorized);
 
-                return (Response.AsJson(new Response.Login()
+                return Response.AsJson(new Response.Login()
                 {
                     Token = userToken
-                }));
+                });
             });
         }
     }

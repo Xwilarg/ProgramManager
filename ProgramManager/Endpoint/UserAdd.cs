@@ -14,16 +14,16 @@ namespace ProgramManager.Endpoint
                 // Error handling
                 Common.Answer? error = Common.BasicCheck(true, args, "token", "username", "password");
                 if (error.HasValue)
-                    return (Response.AsJson(new Response.Information()
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = error.Value.message
-                    }, error.Value.code));
+                    }, error.Value.code);
 
                 if (Program.P.ProgDb.DoesUserExists(args["username"]))
-                    return (Response.AsJson(new Response.Information()
+                    return Response.AsJson(new Response.Information()
                     {
                         Message = "User already exists"
-                    }, HttpStatusCode.BadRequest));
+                    }, HttpStatusCode.BadRequest);
 
                 return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
             });
