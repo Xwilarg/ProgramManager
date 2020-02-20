@@ -2,9 +2,9 @@
 
 namespace ProgramManager.Endpoint
 {
-    public class TokenCheck : NancyModule
+    public class UserList : NancyModule
     {
-        public TokenCheck() : base("/tokenCheck")
+        public UserList() : base("/userAdd")
         {
             Post("/", x =>
             {
@@ -19,8 +19,7 @@ namespace ProgramManager.Endpoint
                         Message = error.Value.message
                     }, error.Value.code);
 
-                return Response.AsJson(new Response.Empty()
-                { }, HttpStatusCode.NoContent);
+                return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
             });
         }
     }

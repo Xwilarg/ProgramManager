@@ -1,6 +1,7 @@
 ﻿using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace ProgramManager.Db
         {
             this.dbName = dbName;
             R = RethinkDB.R;
-            Tokens = new Dictionary<string, string>();
+            Tokens = new Dictionary<string, Response.SingleUser>();
         }
 
         public async Task InitAsync()
@@ -46,15 +47,31 @@ namespace ProgramManager.Db
         {
             if (!IsAuthValid(username, password))
                 return null;
-            if (Tokens.ContainsValue(username))
-                return Tokens.Where(x => x.Value == username).First().Key;
+            var elem = Tokens.Where(x => x.Value.Username == username);
+            if (elem != null)
+                return elem.First().Key;
             string token;
             do
             {
                 token = GetRandomToken();
-            } while (Tokens.ContainsValue(token));
-            Tokens.Add(token, username);
+            } while (Tokens.ContainsKey(token));
+            var user = R.Db(dbName).Table("Users").Get(username).Run(conn);
+            Tokens.Add(token, new Response.SingleUser()
+            {
+                Username = username,
+                Permissions = user.perms
+            });
             return token;
+        }
+
+        public bool HavePermission(string username, UserPermission neededPerm)
+        {
+            if (!Tokens.ContainsKey(username))
+                return false;
+            var user = Tokens[username];
+            if (user.Permissions == 0)
+                return true;
+            return (user.Permissions & (int)neededPerm) > 0;
         }
 
         public void AddUser(string username, string password, int perms)
@@ -68,11 +85,21 @@ namespace ProgramManager.Db
             ).Run(conn);
         }
 
+        public ReadOnlyCollection<Response.SingleUser> GetAllUsers()
+        {
+            List<Response.SingleUser> users = new List<Response.SingleUser>();
+            foreach (var elem in R.Db(dbName).Table("Users").Run(conn))
+            {
+                System.Console.WriteLine(elem.ToString());
+            }
+            return users.AsReadOnly();
+        }
+
         public bool DoesUserExists(string username)
             => R.Db(dbName).Table("Users").GetAll(username).Count().Eq(1).Run<bool>(conn);
 
         public bool IsTokenValid(string token)
-            => Tokens.ContainsValue(token);
+            => Tokens.ContainsKey(token);
 
         /// <summary>
         /// Check if any account are registered
@@ -93,6 +120,6 @@ namespace ProgramManager.Db
         private readonly RethinkDB R;
         private Connection conn;
         private readonly string dbName;
-        public Dictionary<string, string> Tokens { private set; get; } // Token / Username
+        public Dictionary<string, Response.SingleUser> Tokens { private set; get; } // Token / Username
     }
 }

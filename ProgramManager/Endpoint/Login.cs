@@ -12,7 +12,7 @@ namespace ProgramManager.Endpoint
                 var args = Common.ParseArgs(Request.Body);
 
                 // Error handling
-                Common.Answer? error = Common.BasicCheck(false, args, "username", "password");
+                Common.Answer? error = Common.BasicCheck(false, args, "username", "password", "permissions");
                 if (error.HasValue)
                     return Response.AsJson(new Response.Information()
                     {
