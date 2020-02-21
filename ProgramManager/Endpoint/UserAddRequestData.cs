@@ -2,13 +2,12 @@
 
 namespace ProgramManager.Endpoint
 {
-    public class UserAdd : NancyModule
+    public class UserAddRequestData : NancyModule
     {
         /// <summary>
-        /// Add an user given an URL token and a password.
-        /// Users datas are stored in Program.P.UserRequests
+        /// Get user data from an URL
         /// </summary>
-        public UserAdd() : base("/userAdd")
+        public UserAddRequestData() : base("/userAddRequestData")
         {
             Post("/", x =>
             {
@@ -16,7 +15,7 @@ namespace ProgramManager.Endpoint
                 var args = Common.ParseArgs(Request.Body);
 
                 // Error handling
-                Common.Answer? error = Common.BasicCheck(false, args, "urlToken", "password");
+                Common.Answer? error = Common.BasicCheck(true, args, "urlToken");
                 if (error.HasValue)
                     return Response.AsJson(new Response.Information()
                     {
@@ -29,17 +28,13 @@ namespace ProgramManager.Endpoint
                         Message = "Invalid urlToken"
                     }, HttpStatusCode.BadRequest);
 
-                if (Program.P.ProgDb.DoesUserExists(args["username"]))
-                    return Response.AsJson(new Response.Information()
-                    {
-                        Message = "User already exists"
-                    }, HttpStatusCode.BadRequest);
-
                 var user = Program.P.UserRequests[args["urlToken"]];
-                Program.P.ProgDb.AddUser(user.Username, args["password"], user.Permissions);
-                Program.P.UserRequests.Remove(args["urlToken"]);
 
-                return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
+                return Response.AsJson(new Response.SingleUser()
+                {
+                    Username = user.Username,
+                    Permissions = user.Permissions
+                });
             });
         }
     }

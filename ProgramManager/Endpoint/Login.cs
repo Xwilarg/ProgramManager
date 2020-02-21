@@ -4,6 +4,9 @@ namespace ProgramManager.Endpoint
 {
     public class Login : NancyModule
     {
+        /// <summary>
+        /// Login an user with its username and password, returns it session token
+        /// </summary>
         public Login() : base("/login")
         {
             Post("/", x =>

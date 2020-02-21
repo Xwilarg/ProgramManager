@@ -4,6 +4,10 @@ namespace ProgramManager.Endpoint
 {
     public class UserAddRequest : NancyModule
     {
+        /// <summary>
+        /// Request the creation of an URL allowing to create a new user
+        /// Given a session token, the new user username and permissions
+        /// </summary>
         public UserAddRequest() : base("/userAddRequest")
         {
             Post("/", x =>

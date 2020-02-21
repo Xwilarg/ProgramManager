@@ -4,6 +4,9 @@ namespace ProgramManager.Endpoint
 {
     public class TokenCheck : NancyModule
     {
+        /// <summary>
+        /// Check if session token is still valid
+        /// </summary>
         public TokenCheck() : base("/tokenCheck")
         {
             Post("/", x =>

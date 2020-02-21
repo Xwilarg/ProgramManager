@@ -5,6 +5,9 @@ namespace ProgramManager.Endpoint
 {
     public class UserList : NancyModule
     {
+        /// <summary>
+        /// List all users (username and permissions) given a session token
+        /// </summary>
         public UserList() : base("/userList")
         {
             Post("/", x =>
