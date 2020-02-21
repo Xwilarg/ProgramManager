@@ -115,7 +115,7 @@ namespace ProgramManager.Db
         /// </summary>
         /// <returns></returns>
         public async Task<bool> DoesAccountExists()
-            => await R.Db(dbName).Table("Users").Count().Eq(1).RunAsync<bool>(conn);
+            => !await R.Db(dbName).Table("Users").Count().Eq(0).RunAsync<bool>(conn);
 
         public string GetRandomToken()
         {
