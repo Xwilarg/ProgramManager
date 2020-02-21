@@ -39,7 +39,7 @@ namespace ProgramManager
                 string username = Console.ReadLine();
                 Console.WriteLine("Enter your password:");
                 string password = Console.ReadLine();
-                ProgDb.AddUser(username, password, 0);
+                ProgDb.AddUser(username, password, -1);
                 Console.WriteLine("Account created. Press enter to continue...");
                 Console.ReadKey();
                 Console.Clear();

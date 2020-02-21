@@ -73,7 +73,7 @@ namespace ProgramManager.Db
         public bool HavePermission(string token, UserPermission neededPerm)
         {
             var user = Tokens[token];
-            if (user.Permissions == 0)
+            if (user.Permissions == -1)
                 return true;
             return (user.Permissions & (int)neededPerm) > 0;
         }
