@@ -23,19 +23,19 @@ namespace ProgramManager.Endpoint
                         Message = error.Value.message
                     }, error.Value.code);
 
-                if (Program.P.UserRequests.ContainsKey(args["urlToken"]))
+                if (!Program.P.UserRequests.ContainsKey(args["urlToken"]))
                     return Response.AsJson(new Response.Information()
                     {
                         Message = "Invalid urlToken"
                     }, HttpStatusCode.BadRequest);
 
-                if (Program.P.ProgDb.DoesUserExists(args["username"]))
+                var user = Program.P.UserRequests[args["urlToken"]];
+                if (Program.P.ProgDb.DoesUserExists(user.Username))
                     return Response.AsJson(new Response.Information()
                     {
                         Message = "User already exists"
                     }, HttpStatusCode.BadRequest);
 
-                var user = Program.P.UserRequests[args["urlToken"]];
                 Program.P.ProgDb.AddUser(user.Username, args["password"], user.Permissions);
                 Program.P.UserRequests.Remove(args["urlToken"]);
 

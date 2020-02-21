@@ -51,7 +51,7 @@ namespace ProgramManager.Endpoint
 
                 return Response.AsJson(new Response.Login()
                 {
-                    Token = Program.P.ProgDb.GetRandomToken()
+                    Token = token
                 });
             });
         }
