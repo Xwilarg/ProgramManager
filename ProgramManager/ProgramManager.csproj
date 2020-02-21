@@ -71,6 +71,7 @@
     <Compile Include="Endpoint\Login.cs" />
     <Compile Include="Endpoint\TokenCheck.cs" />
     <Compile Include="Endpoint\UserAdd.cs" />
+    <Compile Include="Endpoint\UserAddRequest.cs" />
     <Compile Include="Endpoint\UserList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

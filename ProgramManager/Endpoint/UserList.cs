@@ -20,6 +20,12 @@ namespace ProgramManager.Endpoint
                         Message = error.Value.message
                     }, error.Value.code);
 
+                if (!Program.P.ProgDb.HavePermission(args["token"], UserPermission.ManageUser))
+                    return Response.AsJson(new Response.Information()
+                    {
+                        Message = "Missing permissions"
+                    }, HttpStatusCode.Unauthorized);
+
                 return Response.AsJson(new Response.User()
                 {
                     Users = Program.P.ProgDb.GetAllUsers().ToArray()

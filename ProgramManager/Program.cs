@@ -1,6 +1,7 @@
 ﻿using Nancy.Hosting.Self;
 using SimpleCrypto;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,8 @@ namespace ProgramManager
 
         public ICryptoService Crypto { private set; get; } // Crypto service to generate hashes (PBKDF2z)
 
+        public Dictionary<string, Response.SingleUser> UserRequests; // token / user
+
         private async Task InitAsync()
         {
             P = this;
@@ -24,6 +27,7 @@ namespace ProgramManager
             // Init authentification service
             Crypto = new PBKDF2();
             Rand = new Random();
+            UserRequests = new Dictionary<string, Response.SingleUser>();
 
             // Init db
             ProgDb = new Db.Db();

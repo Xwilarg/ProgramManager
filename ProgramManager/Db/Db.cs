@@ -67,11 +67,12 @@ namespace ProgramManager.Db
             return token;
         }
 
-        public bool HavePermission(string username, UserPermission neededPerm)
+        public Response.SingleUser GetUserFromToken(string token)
+            => Tokens[token];
+
+        public bool HavePermission(string token, UserPermission neededPerm)
         {
-            if (!Tokens.ContainsKey(username))
-                return false;
-            var user = Tokens[username];
+            var user = Tokens[token];
             if (user.Permissions == 0)
                 return true;
             return (user.Permissions & (int)neededPerm) > 0;
@@ -116,7 +117,7 @@ namespace ProgramManager.Db
         public async Task<bool> DoesAccountExists()
             => await R.Db(dbName).Table("Users").Count().Eq(1).RunAsync<bool>(conn);
 
-        private string GetRandomToken()
+        public string GetRandomToken()
         {
             string str = "";
             for (int i = 0; i < 30; i++)
