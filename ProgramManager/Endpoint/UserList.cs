@@ -1,10 +1,11 @@
 ﻿using Nancy;
+using System.Linq;
 
 namespace ProgramManager.Endpoint
 {
     public class UserList : NancyModule
     {
-        public UserList() : base("/userAdd")
+        public UserList() : base("/userList")
         {
             Post("/", x =>
             {
@@ -19,7 +20,10 @@ namespace ProgramManager.Endpoint
                         Message = error.Value.message
                     }, error.Value.code);
 
-                return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
+                return Response.AsJson(new Response.User()
+                {
+                    Users = Program.P.ProgDb.GetAllUsers().ToArray()
+                });
             });
         }
     }

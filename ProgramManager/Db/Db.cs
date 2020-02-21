@@ -93,7 +93,11 @@ namespace ProgramManager.Db
             List<Response.SingleUser> users = new List<Response.SingleUser>();
             foreach (var elem in R.Db(dbName).Table("Users").Run(conn))
             {
-                System.Console.WriteLine(elem.ToString());
+                users.Add(new Response.SingleUser()
+                {
+                    Permissions = elem.perms,
+                    Username = elem.id
+                });
             }
             return users.AsReadOnly();
         }
