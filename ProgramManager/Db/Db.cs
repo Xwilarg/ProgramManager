@@ -47,12 +47,8 @@ namespace ProgramManager.Db
         {
             if (!IsAuthValid(username, password))
                 return null;
-            if (Tokens.Count > 0)
-            {
-                var elem = Tokens.Where(x => x.Value.Username == username);
-                if (elem != null)
-                    return elem.First().Key;
-            }
+            if (Tokens.Any(x => x.Value.Username == username))
+                return Tokens.Where(x => x.Value.Username == username).First().Key;
             string token;
             do
             {
@@ -87,6 +83,11 @@ namespace ProgramManager.Db
                 .With("salt", salt)
                 .With("perms", perms)
             ).Run(conn);
+        }
+
+        public void DeleteUser(string username)
+        {
+            R.Db(dbName).Table("Users").Filter(R.HashMap("id", username)).Delete().Run(conn);
         }
 
         public ReadOnlyCollection<Response.SingleUser> GetAllUsers()
