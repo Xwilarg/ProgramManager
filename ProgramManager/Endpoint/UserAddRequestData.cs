@@ -15,14 +15,14 @@ namespace ProgramManager.Endpoint
                 var args = Common.ParseArgs(Request.Body);
 
                 // Error handling
-                Common.Answer? error = Common.BasicCheck(true, args, "urlToken");
+                Common.Answer? error = Common.BasicCheck(false, args, "urlToken");
                 if (error.HasValue)
                     return Response.AsJson(new Response.Information()
                     {
                         Message = error.Value.message
                     }, error.Value.code);
 
-                if (Program.P.UserRequests.ContainsKey(args["urlToken"]))
+                if (!Program.P.UserRequests.ContainsKey(args["urlToken"]))
                     return Response.AsJson(new Response.Information()
                     {
                         Message = "Invalid urlToken"
