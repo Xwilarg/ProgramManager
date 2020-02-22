@@ -18,7 +18,7 @@ namespace ProgramManager
 
         public ICryptoService Crypto { private set; get; } // Crypto service to generate hashes (PBKDF2z)
 
-        public Dictionary<string, Response.SingleUser> UserRequests; // token / user
+        public Dictionary<string, Response.SingleUser> UserRequests { private set; get; } // token / user
 
         private async Task InitAsync()
         {
@@ -44,6 +44,7 @@ namespace ProgramManager
                 Console.ReadKey();
                 Console.Clear();
             }
+            ProgDb.Processes.Add("AA", new LocalProcess("C:\\Users\\xwila\\Documents\\GitHub\\Sanara\\SanaraV2\\bin\\Debug\\Sanara.exe")); // Debug
 
             // Init backend
             AutoResetEvent autoEvent = new AutoResetEvent(false);

@@ -14,6 +14,7 @@ namespace ProgramManager.Db
             this.dbName = dbName;
             R = RethinkDB.R;
             Tokens = new Dictionary<string, Response.SingleUser>();
+            Processes = new Dictionary<string, LocalProcess>();
         }
 
         public async Task InitAsync()
@@ -25,6 +26,13 @@ namespace ProgramManager.Db
                 R.Db(dbName).TableCreate("Users").Run(conn);
             if (!await R.Db(dbName).TableList().Contains("Programs").RunAsync<bool>(conn))
                 R.Db(dbName).TableCreate("Programs").Run(conn);
+            else
+            {
+                foreach (var elem in R.Db(dbName).Table("Programs").Run(conn))
+                {
+                    Processes.Add(elem.id, new LocalProcess(elem.path));
+                }
+            }
         }
 
         /// <summary>
@@ -85,6 +93,14 @@ namespace ProgramManager.Db
             ).Run(conn);
         }
 
+        public void AddProgram(string path, string name)
+        {
+            R.Db(dbName).Table("Programs").Insert(R.HashMap("id", name)
+                .With("path", path)
+            ).Run(conn);
+            Processes.Add(name, new LocalProcess(path));
+        }
+
         public void DeleteUser(string username)
         {
             R.Db(dbName).Table("Users").Filter(R.HashMap("id", username)).Delete().Run(conn);
@@ -102,6 +118,20 @@ namespace ProgramManager.Db
                 });
             }
             return users.AsReadOnly();
+        }
+
+        public ReadOnlyCollection<Response.SingleProgram> GetAllPrograms()
+        {
+            List<Response.SingleProgram> programs = new List<Response.SingleProgram>();
+            foreach (var elem in Processes)
+            {
+                programs.Add(new Response.SingleProgram()
+                {
+                    Name = elem.Key,
+                    Stdout = elem.Value.GetStdout()
+                });
+            }
+            return programs.AsReadOnly();
         }
 
         public bool DoesUserExists(string username)
@@ -130,5 +160,6 @@ namespace ProgramManager.Db
         private Connection conn;
         private readonly string dbName;
         public Dictionary<string, Response.SingleUser> Tokens { private set; get; } // Token / Username
+        public Dictionary<string, LocalProcess> Processes { private set; get; }
     }
 }
