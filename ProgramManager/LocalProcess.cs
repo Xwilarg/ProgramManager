@@ -10,6 +10,16 @@ namespace ProgramManager
         {
             stdout = "";
             process = new Process();
+            FileInfo fi = new FileInfo(path);
+            process.StartInfo = new ProcessStartInfo()
+            {
+                FileName = path,
+                WorkingDirectory = fi.DirectoryName,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
             process.OutputDataReceived += (sender, e) => {
                 System.Console.WriteLine(e.Data);
                 stdout += e.Data + "\n";
@@ -18,27 +28,18 @@ namespace ProgramManager
                 System.Console.WriteLine(e.Data);
                 stdout += e.Data + "\n";
             };
-            thread = new Thread(new ThreadStart(() => { KeepAlive(path); }));
+            thread = new Thread(new ThreadStart(KeepAlive));
             thread.Start();
         }
 
-        public void KeepAlive(string path)
+        public void KeepAlive()
         {
             while (Thread.CurrentThread.IsAlive)
             {
-                FileInfo fi = new FileInfo(path);
-                System.Console.WriteLine(path);
-                ProcessStartInfo startInfo = new ProcessStartInfo()
-                {
-                    FileName = path,
-                    WorkingDirectory = fi.Directory.ToString(),
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true
-                };
                 stdout = "";
-                process = Process.Start(startInfo);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
                 process.WaitForExit();
             }
         }

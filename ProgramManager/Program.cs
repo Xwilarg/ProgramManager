@@ -44,7 +44,7 @@ namespace ProgramManager
                 Console.ReadKey();
                 Console.Clear();
             }
-            ProgDb.Processes.Add("AA", new LocalProcess("C:\\Users\\xwila\\Documents\\GitHub\\Sanara\\SanaraV2\\bin\\Debug\\Sanara.exe")); // Debug
+            ProgDb.Processes.Add("AA", new LocalProcess("C:\\Users\\xwila\\Documents\\GitHub\\Sanara\\SanaraV2\\bin\\Debug\\SanaraV2.exe")); // Debug
 
             // Init backend
             AutoResetEvent autoEvent = new AutoResetEvent(false);
