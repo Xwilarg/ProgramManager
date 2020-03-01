@@ -71,6 +71,9 @@
     <Compile Include="Endpoint\Login.cs" />
     <Compile Include="Endpoint\ProgramAdd.cs" />
     <Compile Include="Endpoint\ProgramList.cs" />
+    <Compile Include="Endpoint\ProgramRestart.cs" />
+    <Compile Include="Endpoint\ProgramStart.cs" />
+    <Compile Include="Endpoint\ProgramStop.cs" />
     <Compile Include="Endpoint\TokenCheck.cs" />
     <Compile Include="Endpoint\UserAdd.cs" />
     <Compile Include="Endpoint\UserAddRequest.cs" />
