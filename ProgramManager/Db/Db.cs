@@ -128,7 +128,8 @@ namespace ProgramManager.Db
                 programs.Add(new Response.SingleProgram()
                 {
                     Name = elem.Key,
-                    Stdout = elem.Value.GetStdout()
+                    Stdout = elem.Value.GetStdout(),
+                    IsStopped = elem.Value.IsStopped()
                 });
             }
             return programs.AsReadOnly();

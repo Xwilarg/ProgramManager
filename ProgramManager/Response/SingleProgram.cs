@@ -9,5 +9,8 @@ namespace ProgramManager.Response
 
         [JsonProperty]
         public string Stdout;
+
+        [JsonProperty]
+        public bool IsStopped;
     }
 }

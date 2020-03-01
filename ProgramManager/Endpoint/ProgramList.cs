@@ -30,9 +30,9 @@ namespace ProgramManager.Endpoint
                         Message = "Missing permissions"
                     }, HttpStatusCode.Unauthorized);
 
-                return Response.AsJson(new Response.User()
+                return Response.AsJson(new Response.Program()
                 {
-                    Users = Program.P.ProgDb.GetAllUsers().ToArray()
+                    Processes = Program.P.ProgDb.GetAllPrograms().ToArray()
                 });
             });
         }
