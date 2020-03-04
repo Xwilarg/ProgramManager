@@ -25,6 +25,7 @@ namespace ProgramManager
                 if (c >= 32 && c < 127)
                     str += c;
             str = CleanFirstMatch(str, "Connected to ([\\s\\S]+)");
+            str = CleanFirstMatch(str, "Disconnected to ([\\s\\S]+)");
             str = CleanFirstMatch(str, "POST channels\\/([0-9]+)\\/messages");
             str = CleanFirstMatch(str, "Error occurred executing \"[^\"]+\" for ([^#]+#[0-9]+)");
             str = CleanFirstMatch(str, "for XXXXXXXXXX in (.+) ---> .+Exception:");
