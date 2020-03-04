@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -9,32 +10,21 @@ namespace ProgramManager
     {
         public LocalProcess(string path)
         {
+            this.path = path;
             stdout = "";
-            process = new Process();
             autoRestart = true;
-            FileInfo fi = new FileInfo(path);
-            process.StartInfo = new ProcessStartInfo()
-            {
-                FileName = path,
-                WorkingDirectory = fi.DirectoryName,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
-            };
-            process.OutputDataReceived += (sender, e) => {
-                stdout += CleanProcessOutput(e.Data + "\n");
-            };
-            process.ErrorDataReceived += (sender, e) => {
-                stdout += CleanProcessOutput(e.Data + "\n");
-            };
             thread = new Thread(new ThreadStart(KeepAlive));
             thread.Start();
         }
 
         private string CleanProcessOutput(string str)
         {
-            str = CleanFirstMatch(str, "Connected to ([^\n]+)");
+            string oldStr = str;
+            str = "";
+            foreach (char c in oldStr)
+                if (c >= 32 && c < 127)
+                    str += c;
+            str = CleanFirstMatch(str, "Connected to ([\\s\\S]+)");
             str = CleanFirstMatch(str, "POST channels\\/([0-9]+)\\/messages");
             str = CleanFirstMatch(str, "Error occurred executing \"[^\"]+\" for ([^#]+#[0-9]+)");
             str = CleanFirstMatch(str, "for XXXXXXXXXX in (.+) ---> .+Exception:");
@@ -43,11 +33,16 @@ namespace ProgramManager
 
         private string CleanFirstMatch(string str, string match)
         {
+            if (str == null)
+                return "";
             Match m = Regex.Match(str, match);
             if (!m.Success)
                 return str;
             string match1 = m.Groups[1].Value;
-            return str.Replace(match1, "XXXXXXXXXX");
+            string xxx = "";
+            for (int i = 0; i < match1.Length; i++)
+                xxx += "X";
+            return str.Replace(match1, xxx);
         }
 
         private void KeepAlive()
@@ -56,7 +51,24 @@ namespace ProgramManager
             {
                 if (autoRestart)
                 {
-                    stdout = "";
+                    process = new Process();
+                    FileInfo fi = new FileInfo(path);
+                    process.StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = path,
+                        WorkingDirectory = fi.DirectoryName,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+                    process.OutputDataReceived += (sender, e) => {
+                        stdout += CleanProcessOutput(e.Data) + "\n";
+                    };
+                    process.ErrorDataReceived += (sender, e) => {
+                        stdout += CleanProcessOutput(e.Data) + "\n";
+                    };
+                    Console.WriteLine(DateTime.Now.ToString() + ": Starting " + path);
                     process.Start();
                     process.BeginOutputReadLine();
                     process.BeginErrorReadLine();
@@ -97,5 +109,6 @@ namespace ProgramManager
         private readonly Thread thread;
         private string stdout;
         private bool autoRestart;
+        private string path;
     }
 }
