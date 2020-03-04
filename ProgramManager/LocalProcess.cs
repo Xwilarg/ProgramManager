@@ -63,10 +63,18 @@ namespace ProgramManager
                         RedirectStandardError = true
                     };
                     process.OutputDataReceived += (sender, e) => {
-                        stdout += CleanProcessOutput(e.Data) + "\n";
+                        try
+                        {
+                            stdout += CleanProcessOutput(e.Data) + "\n";
+                        }
+                        catch (Exception) { }
                     };
                     process.ErrorDataReceived += (sender, e) => {
-                        stdout += CleanProcessOutput(e.Data) + "\n";
+                        try
+                        {
+                            stdout += CleanProcessOutput(e.Data) + "\n";
+                        }
+                        catch (Exception) { }
                     };
                     Console.WriteLine(DateTime.Now.ToString() + ": Starting " + path);
                     process.Start();
