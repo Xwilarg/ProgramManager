@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace ProgramManager
@@ -22,13 +23,28 @@ namespace ProgramManager
                 RedirectStandardError = true
             };
             process.OutputDataReceived += (sender, e) => {
-                stdout += e.Data + "\n";
+                stdout += CleanProcessOutput(e.Data + "\n");
             };
             process.ErrorDataReceived += (sender, e) => {
-                stdout += e.Data + "\n";
+                stdout += CleanProcessOutput(e.Data + "\n");
             };
             thread = new Thread(new ThreadStart(KeepAlive));
             thread.Start();
+        }
+
+        private string CleanProcessOutput(string str)
+        {
+            str = CleanFirstMatch(str, "Connected to ([^\n]+)");
+            str = CleanFirstMatch(str, "POST channels\\/([0-9]+)\\/messages");
+            str = CleanFirstMatch(str, "Error occurred executing \"[^\"]+\" for ([^#]+#[0-9]+)");
+            str = CleanFirstMatch(str, "for XXXXXXXXXX in (.+) ---> .+Exception:");
+            return str;
+        }
+
+        private string CleanFirstMatch(string str, string match)
+        {
+            string match1 = Regex.Match(str, match).Groups[1].Value;
+            return str.Replace(match1, "XXXXXXXXXX");
         }
 
         private void KeepAlive()

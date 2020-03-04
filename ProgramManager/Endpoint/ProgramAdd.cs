@@ -42,6 +42,8 @@ namespace ProgramManager.Endpoint
                         Message = "File already added"
                     }, HttpStatusCode.BadRequest);
 
+                Program.P.ProgDb.AddProgram(args["path"], fi.Name);
+
                 return Response.AsJson(new Response.Empty(), HttpStatusCode.NoContent);
             });
         }
