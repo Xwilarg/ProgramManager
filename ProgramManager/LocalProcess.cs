@@ -43,7 +43,10 @@ namespace ProgramManager
 
         private string CleanFirstMatch(string str, string match)
         {
-            string match1 = Regex.Match(str, match).Groups[1].Value;
+            Match m = Regex.Match(str, match);
+            if (!m.Success)
+                return str;
+            string match1 = m.Groups[1].Value;
             return str.Replace(match1, "XXXXXXXXXX");
         }
 

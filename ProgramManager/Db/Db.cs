@@ -30,7 +30,7 @@ namespace ProgramManager.Db
             {
                 foreach (var elem in R.Db(dbName).Table("Programs").Run(conn))
                 {
-                    Processes.Add(elem.id, new LocalProcess(elem.path));
+                    Processes.Add((string)elem.id, new LocalProcess((string)elem.path));
                 }
             }
         }
