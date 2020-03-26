@@ -91,6 +91,7 @@ namespace ProgramManager
             autoRestart = false;
             if (!process.HasExited)
             {
+                Console.WriteLine(path + " stopped by user");
                 process.Kill();
             }
         }
@@ -104,6 +105,7 @@ namespace ProgramManager
         {
             if (!process.HasExited)
             {
+                Console.WriteLine(path + " restarted by user");
                 process.Kill();
             }
         }
