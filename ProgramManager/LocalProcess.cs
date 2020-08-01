@@ -19,6 +19,11 @@ namespace ProgramManager
 
         private string CleanProcessOutput(string str)
         {
+            if (str.Contains("Discord.Net v2")) // Means a bot restarted so we clean the whole output
+            {
+                stdout = "";
+                return "";
+            }
             string oldStr = str;
             str = "";
             foreach (char c in oldStr)
