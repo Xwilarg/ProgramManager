@@ -19,7 +19,7 @@ namespace ProgramManager
 
         private string CleanProcessOutput(string str)
         {
-            if (str.Contains("Discord.Net v2")) // Means a bot restarted so we clean the whole output
+            if (str.Contains("Disconnected")) // Means a bot restarted so we clean the whole output
             {
                 stdout = "";
                 return "";
